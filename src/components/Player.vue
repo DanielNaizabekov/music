@@ -2,7 +2,7 @@
   <div class="player">
     <div v-if="isNecessary" class="youtube-wrap">
       <youtube
-        @playing="ready"
+        @playing="started"
         @ended="ended"
         @paused="paused"
         ref="youtube"
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { bus } from '@/main.js';
+import { mapMutations } from 'vuex';
 
 export default {
   data() {
@@ -26,29 +26,33 @@ export default {
     },
   },
   methods: {
-    ready() {
-      this.$player({event: 'ready'});
+    ...mapMutations(['changePlayerLoadingState', 'changePlayerPlayingState']),
+    started() {
+      this.changePlayerLoadingState(false);
+      this.changePlayerPlayingState(true);
     },
     ended() {
-      this.$player({event: 'ended'});
+      this.changePlayerPlayingState(false);
     },
     paused() {
-      this.$player({event: 'paused'});
+      this.changePlayerPlayingState(false);
     },
   },
   mounted() {
-    bus.$on('play', () => {
+    this.$player.onPlay(() => {
       this.player.playVideo();
     });
-    bus.$on('pause', () => {
+    this.$player.onPause(() => {
+      this.changePlayerLoadingState(false);
       this.player.pauseVideo();
     });
-    bus.$on('load', id => {
+    this.$player.onLoadById(id => {
+      this.changePlayerLoadingState(true);
       !this.isNecessary && (this.isNecessary = true);
       this.$nextTick(() => {
         this.player.loadVideoById(id);
       })
-    });
+    })
   },
 }
 </script>

@@ -2,8 +2,12 @@ import { SEARCH } from '@/consts';
 
 const state = {
   searchList: {},
+  playerLoading: false,
+  playerPlaying: false,
 };
 const getters = {
+  isPlayerLoading: s => s.playerLoading,
+  isPlayerPlaying: s => s.playerPlaying,
   [SEARCH]: s => s.searchList,
 };
 const actions = {
@@ -12,7 +16,14 @@ const actions = {
   },
 }
 const mutations = {
+  changePlayerLoadingState(state, loadingState) {
+    state.playerLoading = loadingState;
+  },
+  changePlayerPlayingState(state, playingState) {
+    state.playerPlaying = playingState;
+  },
   [SEARCH](state, data) {
+    // localStorage.setItem( 'list', JSON.stringify(data) );
     state.searchList = data;
   },
 };

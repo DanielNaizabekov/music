@@ -1,25 +1,43 @@
 <template>
   <div class="home">
     <Search/>
-    <Results/>
+    <div class="lists-wrap">
+      <TracksList title="Search results" :list="searchList"/>
+    </div>
     <Player/>
   </div>
 </template>
 
 <script>
 import Search from '../components/Search';
-import Results from '../components/Results';
+import TracksList from '../components/TracksList';
 import Player from '../components/Player';
+import { mapGetters } from 'vuex';
+import { SEARCH } from '@/consts';
 
 export default {
-  components: { Search, Player, Results },
+  components: { Search, Player, TracksList },
+  computed: {
+    ...mapGetters({
+      searchList: SEARCH,
+    }),
+  },
 }
 </script>
 
 <style scoped>
 .home {
-  height: 100%;
+  min-height: 100%;
   background: #202020;
   padding: 10px 15px;
+}
+.lists-wrap {
+  margin: 55px 0 0 0;
+}
+
+@media screen and (max-width: 460px) {
+  .home {
+    padding: 10px;
+  }
 }
 </style>

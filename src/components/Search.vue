@@ -1,12 +1,14 @@
 <template>
   <div class="search">
     <div class="search-input-wrap">
-      <input
-        class="search-input"
-        v-model="title"
-        type="text"
-        placeholder="Search"
-      >
+      <form class="search-form" @submit.prevent="submit">
+        <input
+          class="search-input"
+          v-model="title"
+          type="text"
+          placeholder="Search"
+        >
+      </form>
       <div
         class="search-input-btn"
         @click="submit"
@@ -26,6 +28,7 @@ export default {
   data() {
     return {
       title: '',
+      prevTitle: 'prevTitle',
     };
   },
   methods: {
@@ -33,6 +36,8 @@ export default {
       search: SEARCH,
     }),
     submit() {
+      if(this.prevTitle === this.title || !this.title) return;
+      this.prevTitle = this.title;
       const params = {
         title: this.title,
         type: 'video',
@@ -46,6 +51,8 @@ export default {
 
 <style scoped>
 .search {
+  position: fixed;
+  width: calc(100% - 30px);
   display: flex;
   justify-content: center;
 }
@@ -59,8 +66,11 @@ export default {
 .search-input-wrap:focus-within {
   border: 1px solid #1C62B9;
 }
-.search-input {
+.search-form {
   flex-grow: 1;
+}
+.search-input {
+  width: 100%;
   color: #fff;
   border: 0;
   padding: 8px 12px;
@@ -85,5 +95,11 @@ export default {
 }
 .search-input-btn i {
   display: block;
+}
+
+@media screen and (max-width: 460px) {
+  .search {
+    width: calc(100% - 20px);
+  }
 }
 </style>

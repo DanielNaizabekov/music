@@ -1,13 +1,14 @@
 <template>
-  <div class="results">
+  <div v-if="list.items && list.items.length" class="tracks-list">
+    <h3 class="tracks-list-title">{{ title }}</h3>
     <div
-      v-for="item in results.items"
-      :key="item.etag"
+      v-for="(item, i) in list.items"
+      :key="item.etag + i"
       @click="playToggle(item.id.videoId)"
-      class="results-item"
+      class="tracks-list-item"
       :class="{active: item.id.videoId === currentTrack}"
     >
-      <div class="results-item-play">
+      <div class="tracks-list-item-play">
         <transition mode="out-in">
           <img
             v-if="thisTrackIsLoading(item.id.videoId)"
@@ -25,96 +26,94 @@
         </transition>
       </div>
       <div
-        class="results-item-preview"
+        class="tracks-list-item-preview"
         :style="`background: url(${item.snippet.thumbnails.default.url});`"
       />
-      <span class="results-item-title">{{ item.snippet.title }}</span>
+      <span class="tracks-list-item-title">{{ item.snippet.title }}</span>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { SEARCH } from '@/consts';
-import { bus } from '@/main';
 
 export default {
+  props: {
+    title: {
+      required: true,
+      type: String,
+    },
+    list: {
+      required: true,
+      type: Object,
+    },
+  },
   data() {
     return {
       currentTrack: '',
-      playing: false,
-      playerLoading: true,
     };
   },
   computed: {
-    ...mapGetters({
-      results: SEARCH,
-    }),
+    ...mapGetters(['isPlayerLoading', 'isPlayerPlaying']),
     thisTrackIsLoading() {
-      return id => id === this.currentTrack && this.playerLoading;
+      return id => id === this.currentTrack && this.isPlayerLoading;
     },
     thisTrackIsPlaying() {
-      return id => id === this.currentTrack && this.playing;
+      return id => id === this.currentTrack && this.isPlayerPlaying;
     },
   },
   methods: {
     playToggle(id) {
-      if(id === this.currentTrack && this.playing) {
-        this.$player({ event: 'pause' });
-        this.playerLoading = false;
-        this.playing = false;
+      if(this.thisTrackIsLoading(id) || this.thisTrackIsPlaying(id)) {
+        this.$player.pause();
       } else if(id === this.currentTrack) {
-        this.$player({ event: 'play' });
-        this.playing = true;
+        this.$player.play();
       } else {
-        this.$player({ event: 'load', id });
-        this.playerLoading = true;
+        this.$player.loadById(id)
         this.currentTrack = id;
-        this.playing = true;
       }
     },
-  },
-  mounted() {
-    bus.$on('ready', () => {
-      this.playing = true;
-      this.playerLoading = false;
-    });
-    bus.$on('ended', () => {
-      this.playing = false;
-    });
-    bus.$on('paused', () => {
-      this.playing = false;
-    });
   },
 }
 </script>
 
 <style scoped>
-.results {
-  margin-top: 20px;
+.tracks-list {
   border-radius: 20px;
   overflow: hidden;
+  background: #181818;
 }
-.results-item {
+.tracks-list-title {
+  color: #fff;
+  border-bottom: 1px solid #4C4C4C;
+  padding: 15px;
+  margin: 0;
+}
+.tracks-list-item {
   display: flex;
   align-items: center;
-  background: #181818;
   color: #fff;
   padding: 10px 15px;
   font-size: 14px;
   transition: .2s;
   cursor: pointer;
 }
-.results-item:hover {
+.tracks-list-item:first-child {
+  margin-top: 10px;
+}
+.tracks-list-item:last-child {
+  margin-bottom: 10px;
+}
+.tracks-list-item:hover {
   background: #121212;
 }
-.results-item:active {
+.tracks-list-item:active {
   background: #202020;
 }
-.results-item.active {
+.tracks-list-item.active {
   background: #121212;
 }
-.results-item-play {
+.tracks-list-item-play {
   flex-shrink: 0;
   border-radius: 50px;
   width: 35px;
@@ -124,10 +123,10 @@ export default {
   align-items: center;
   background: #373737;
 }
-.results-item-play:hover {
+.tracks-list-item-play:hover {
   background: #4D4D4D;
 }
-.results-item-preview {
+.tracks-list-item-preview {
   flex-shrink: 0;
   margin: 0 13px 0 20px;
   width: 70px;
@@ -136,11 +135,30 @@ export default {
   background-position: 50% !important;
   border-radius: 50px;
 }
-.results-item-title {
+.tracks-list-item-title {
   transition: .2s;
 }
-.results-item:hover .results-item-title {
+.tracks-list-item:hover .tracks-list-item-title {
   margin-left: 5px;
+}
+@media (hover: none) {
+  .tracks-list-item-title {
+    transition: 0s;
+  }
+  .tracks-list-item:hover .tracks-list-item-title {
+    margin-left: 0px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .tracks-list-item {
+    padding: 10px;
+  }
+  .tracks-list-item-preview {
+    margin: 0 9px 0 16px;
+    width: 63px;
+    height: 63px;
+  }
 }
 
 .v-enter,
