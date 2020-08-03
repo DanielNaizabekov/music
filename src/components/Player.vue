@@ -2,6 +2,8 @@
   <div class="player">
     <div v-if="isNecessary" class="youtube-wrap">
       <youtube
+        width="200"
+        height="200"
         @playing="started"
         @ended="ended"
         @paused="paused"
@@ -50,7 +52,7 @@ export default {
       this.changePlayerLoadingState(true);
       !this.isNecessary && (this.isNecessary = true);
       this.$nextTick(() => {
-        this.player.loadVideoById(id);
+        this.player.loadVideoById({videoId: id, suggestedQuality: 'small'});
       })
     })
   },

@@ -6,19 +6,19 @@ function wrapUrl(method, params) {
   params.googleApiKey = configs.googleApiKey;
 
   Object.keys(params).forEach(param => {
-    url = url.replace(`:${param}:`, params[param])
+    url = url.replace(`:${param}:`, Array.isArray(params[param]) ? params[param].join() : params[param] );
   });
 
   return url;
 }
 
 const actions = {
-  async HTTP_GET({ commit }, { method, params, mutation }) {
+  async HTTP_GET({ commit }, { method, params, mutation, mutationData }) {
     try {
       const { data } = await axios.get(wrapUrl(method, params));
 
       mutation = mutation === false ? false : mutation ? mutation : method;
-      mutation && commit(mutation, data);
+      mutation && commit(mutation, {data, manualData: mutationData});
 
       return data;
     } catch(error) {

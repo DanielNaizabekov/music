@@ -40,7 +40,6 @@ export default {
       this.prevTitle = this.title;
       const params = {
         title: this.title,
-        type: 'video',
         pageToken: '',
       };
       this.search({ params });

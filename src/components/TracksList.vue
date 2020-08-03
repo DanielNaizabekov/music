@@ -2,22 +2,22 @@
   <div v-if="list.items && list.items.length" class="tracks-list">
     <h3 class="tracks-list-title">{{ title }}</h3>
     <div
-      v-for="(item, i) in list.items"
-      :key="item.etag + i"
-      @click="playToggle(item.id.videoId)"
+      v-for="item in list.items"
+      :key="item.id"
+      @click="playToggle(item.id)"
       class="tracks-list-item"
-      :class="{active: item.id.videoId === currentTrack}"
+      :class="{active: item.id === currentTrack}"
     >
       <div class="tracks-list-item-play">
         <transition mode="out-in">
           <img
-            v-if="thisTrackIsLoading(item.id.videoId)"
+            v-if="thisTrackIsLoading(item.id)"
             key="loading"
             src="../assets/img/loader.svg"
             alt="loading"
           >
           <img
-            v-else-if="thisTrackIsPlaying(item.id.videoId)"
+            v-else-if="thisTrackIsPlaying(item.id)"
             key="playing"
             src="../assets/img/bars.svg"
             alt="playing"
@@ -27,9 +27,9 @@
       </div>
       <div
         class="tracks-list-item-preview"
-        :style="`background: url(${item.snippet.thumbnails.default.url});`"
+        :style="`background: url(${item.previewUrl});`"
       />
-      <span class="tracks-list-item-title">{{ item.snippet.title }}</span>
+      <span class="tracks-list-item-title">{{ item.title }}</span>
     </div>
   </div>
 </template>
@@ -82,6 +82,10 @@ export default {
   border-radius: 20px;
   overflow: hidden;
   background: #181818;
+  margin-bottom: 15px;
+}
+.tracks-list:last-child {
+  margin: 0;
 }
 .tracks-list-title {
   color: #fff;
