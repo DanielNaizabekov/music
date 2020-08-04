@@ -1,2 +1,3 @@
 export const SEARCH = 'SEARCH';
+export const SEARCH_LOAD_MORE = 'SEARCH_LOAD_MORE';
 export const RECOMENDATIONS = 'RECOMENDATIONS';

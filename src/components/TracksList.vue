@@ -50,7 +50,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { SEARCH } from '@/consts';
+import { SEARCH, SEARCH_LOAD_MORE } from '@/consts';
 
 export default {
   props: {
@@ -113,7 +113,7 @@ export default {
           title: this.list.searchTitle,
           pageToken: this.list.nextPageToken,
         };
-        this.search({ params, mutation: 'SEARCH_LOAD_MORE' })
+        this.search({ params, mutation: SEARCH_LOAD_MORE })
         .then(() => {
           this.loadMoreLoading = false;
           window.scrollTo(0, scrollY);

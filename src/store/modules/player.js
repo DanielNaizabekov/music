@@ -1,4 +1,4 @@
-import { SEARCH, RECOMENDATIONS } from '@/consts';
+import { SEARCH, RECOMENDATIONS, SEARCH_LOAD_MORE } from '@/consts';
 
 const state = {
   searchList: {},
@@ -45,7 +45,7 @@ const mutations = {
     };
     state.searchList = list;
   },
-  SEARCH_LOAD_MORE(state, { data }) {
+  [SEARCH_LOAD_MORE](state, { data }) {
     const items = data.items.map(item => ({
       id: item.id.videoId,
       previewUrl: item.snippet.thumbnails.default.url,
