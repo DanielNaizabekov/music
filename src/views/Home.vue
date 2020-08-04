@@ -3,7 +3,7 @@
     <Search/>
     <div class="lists-wrap">
       <TracksList title="Search results" :list="searchList"/>
-      <TracksList title="Recomendations" :list="recomendationList"/>
+      <RecomendationList/>
     </div>
     <Player/>
   </div>
@@ -12,29 +12,17 @@
 <script>
 import Search from '../components/Search';
 import TracksList from '../components/TracksList';
+import RecomendationList from '../components/RecomendationList';
 import Player from '../components/Player';
-import { mapGetters, mapActions } from 'vuex';
-import { SEARCH, RECOMENDATIONS } from '@/consts';
-import recomendationIdList from '@/utils/recomendationIdList';
+import { mapGetters } from 'vuex';
+import { SEARCH } from '@/consts';
 
 export default {
-  components: { Search, Player, TracksList },
+  components: { Search, TracksList, RecomendationList, Player },
   computed: {
     ...mapGetters({
       searchList: SEARCH,
-      recomendationList: RECOMENDATIONS,
     }),
-  },
-  methods: {
-    ...mapActions({
-      getRecomendations: RECOMENDATIONS,
-    }),
-  },
-  mounted() {
-    const params = {
-      id: recomendationIdList,
-    };
-    this.getRecomendations({ params });
   },
 }
 </script>

@@ -31,11 +31,26 @@
       />
       <span class="tracks-list-item-title">{{ item.title }}</span>
     </div>
+
+    <img
+      v-if="loadMoreLoading"
+      class="track-list-load-more-loading"
+      src="../assets/img/loader.svg"
+      alt="loading"
+    >
+    <button
+      v-else-if="list.nextPageToken || nextPageExists"
+      class="track-list-load-more"
+      @click="loadMore"
+    >
+      Load more
+    </button>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { SEARCH } from '@/consts';
 
 export default {
   props: {
@@ -47,10 +62,17 @@ export default {
       required: true,
       type: Object,
     },
+    loadMoreFn: {
+      type: Function,
+    },
+    nextPageExists: {
+      type: Boolean,
+    }
   },
   data() {
     return {
       currentTrack: '',
+      loadMoreLoading: false,
     };
   },
   computed: {
@@ -63,6 +85,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      search: SEARCH,
+    }),
     playToggle(id) {
       if(this.thisTrackIsLoading(id) || this.thisTrackIsPlaying(id)) {
         this.$player.pause();
@@ -73,12 +98,36 @@ export default {
         this.currentTrack = id;
       }
     },
+    loadMore() {
+      this.loadMoreLoading = true;
+      const scrollY = window.scrollY;
+
+      if(this.loadMoreFn) {
+        this.loadMoreFn()
+        .then(() => {
+          this.loadMoreLoading = false;
+          window.scrollTo(0, scrollY);
+        });
+      } else {
+        const params = {
+          title: this.list.searchTitle,
+          pageToken: this.list.nextPageToken,
+        };
+        this.search({ params, mutation: 'SEARCH_LOAD_MORE' })
+        .then(() => {
+          this.loadMoreLoading = false;
+          window.scrollTo(0, scrollY);
+        });
+      }
+    },
   },
 }
 </script>
 
 <style scoped>
 .tracks-list {
+  display: flex;
+  flex-direction: column;
   border-radius: 20px;
   overflow: hidden;
   background: #181818;
@@ -145,6 +194,28 @@ export default {
 .tracks-list-item:hover .tracks-list-item-title {
   margin-left: 5px;
 }
+.track-list-load-more-loading {
+  margin: 10px 0 20px 0;
+}
+.track-list-load-more {
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  padding: 8px 20px;
+  color: #fff;
+  font-weight: 100;
+  margin: 10px 0 20px 0;
+  align-self: center;
+  cursor: pointer;
+  outline: none;
+}
+.track-list-load-more:hover {
+  background: #121212;
+}
+.track-list-load-more:active {
+  background: #202020;
+}
+
 @media (hover: none) {
   .tracks-list-item-title {
     transition: 0s;

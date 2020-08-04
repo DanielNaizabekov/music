@@ -13,11 +13,16 @@ const getters = {
   [RECOMENDATIONS]: s => s.recomendationList,
 };
 const actions = {
-  [SEARCH]({ dispatch }, { params }) {
-    dispatch('HTTP_GET', { method: SEARCH, params, mutationData: params.title });
+  [SEARCH]({ dispatch }, { params, mutation }) {
+    return dispatch('HTTP_GET', {
+      method: SEARCH,
+      params,
+      mutation,
+      mutationData: params.title
+    });
   },
   [RECOMENDATIONS]({ dispatch }, { params }) {
-    dispatch('HTTP_GET', { method: RECOMENDATIONS, params });
+    return dispatch('HTTP_GET', { method: RECOMENDATIONS, params });
   },
 };
 const mutations = {
@@ -40,6 +45,22 @@ const mutations = {
     };
     state.searchList = list;
   },
+  SEARCH_LOAD_MORE(state, { data }) {
+    const items = data.items.map(item => ({
+      id: item.id.videoId,
+      previewUrl: item.snippet.thumbnails.default.url,
+      title: item.snippet.title,
+    }));
+    const list = {
+      ...state.searchList,
+      items: [...state.searchList.items, ...items],
+      nextPageToken: data.nextPageToken,
+    };
+    list.items = list.items.filter((filterItem, index) => {
+      return list.items.findIndex(findItem => filterItem.id === findItem.id) === index;
+    });
+    state.searchList = list;
+  },
   [RECOMENDATIONS](state, {data}) {
     const items = data.items.map(item => ({
       id: item.id,
@@ -47,7 +68,8 @@ const mutations = {
       title: item.snippet.title,
     }));
     const list = {
-      items,
+      ...state.recomendationList,
+      items: state.recomendationList.items ? [...state.recomendationList.items, ...items] : [...items],
     };
     state.recomendationList = list;
   },
