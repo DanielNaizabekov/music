@@ -9,17 +9,37 @@ export default {
       pause() {
         bus.$emit('pause');
       },
-      loadById(id) {
-        bus.$emit('load', id);
+      prevTrack() {
+        bus.$emit('prevTrack');
       },
+      nextTrack() {
+        bus.$emit('nextTrack');
+      },
+      // loadById(id) {
+      //   bus.$emit('load', id);
+      // },
+      loadPlaylist(idList, startIndex) {
+        bus.$emit('loadPlaylist', idList, startIndex);
+      },
+
+
       onPlay(fn) {
         bus.$on('play', fn);
       },
       onPause(fn) {
         bus.$on('pause', fn);
       },
-      onLoadById(fn) {
-        bus.$on('load', fn);
+      onPrevTrack(fn) {
+        bus.$on('prevTrack', fn);
+      },
+      onNextTrack(fn) {
+        bus.$on('nextTrack', fn);
+      },
+      // onLoadById(fn) {
+      //   bus.$on('load', fn);
+      // },
+      onLoadPlaylist(fn) {
+        bus.$on('loadPlaylist', fn);
       },
     };
   },

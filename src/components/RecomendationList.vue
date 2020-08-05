@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <TracksList
-      title="Recomendations"
-      :list="recomendationList"
-      :loadMoreFn="loadMore"
-      :nextPageExists="!!recomendationIdList.length"
-    />
-  </div>
+  <TracksList
+    title="Recomendations"
+    :list="recomendationList"
+    :loadMoreFn="loadMore"
+    :nextPageExists="!!recomendationIdList.length"
+  />
 </template>
 
 <script>

@@ -3,12 +3,14 @@ import { SEARCH, RECOMENDATIONS, SEARCH_LOAD_MORE } from '@/consts';
 const state = {
   searchList: {},
   recomendationList: {},
+  currentTrackId: '',
   playerLoading: false,
   playerPlaying: false,
 };
 const getters = {
   isPlayerLoading: s => s.playerLoading,
   isPlayerPlaying: s => s.playerPlaying,
+  currentTrackId: s => s.currentTrackId,
   [SEARCH]: s => s.searchList,
   [RECOMENDATIONS]: s => s.recomendationList,
 };
@@ -31,6 +33,9 @@ const mutations = {
   },
   changePlayerPlayingState(state, playingState) {
     state.playerPlaying = playingState;
+  },
+  changeCurrentTrackId(state, id) {
+    state.currentTrackId = id;
   },
   [SEARCH](state, {data, manualData: searchTitle}) {
     const items = data.items.map(item => ({

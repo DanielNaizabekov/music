@@ -5,6 +5,7 @@
       <TracksList title="Search results" :list="searchList"/>
       <RecomendationList/>
     </div>
+    <Controller/>
     <Player/>
   </div>
 </template>
@@ -13,12 +14,13 @@
 import Search from '../components/Search';
 import TracksList from '../components/TracksList';
 import RecomendationList from '../components/RecomendationList';
+import Controller from '../components/Controller';
 import Player from '../components/Player';
 import { mapGetters } from 'vuex';
 import { SEARCH } from '@/consts';
 
 export default {
-  components: { Search, TracksList, RecomendationList, Player },
+  components: { Search, TracksList, RecomendationList, Controller, Player },
   computed: {
     ...mapGetters({
       searchList: SEARCH,
@@ -34,7 +36,7 @@ export default {
   padding: 10px 15px;
 }
 .lists-wrap {
-  margin: 55px 0 0 0;
+  margin: 55px 0 85px 0;
 }
 
 @media screen and (max-width: 460px) {
