@@ -15,11 +15,20 @@ export default {
       nextTrack() {
         bus.$emit('nextTrack');
       },
+      started(event) {
+        bus.$emit('started', event);
+      },
       // loadById(id) {
       //   bus.$emit('load', id);
       // },
       loadPlaylist(idList, startIndex) {
         bus.$emit('loadPlaylist', idList, startIndex);
+      },
+      timeupdate(playerData) {
+        bus.$emit('timeupdate', playerData);
+      },
+      seekTo(time) {
+        bus.$emit('seekTo', time);
       },
 
 
@@ -35,11 +44,20 @@ export default {
       onNextTrack(fn) {
         bus.$on('nextTrack', fn);
       },
+      onStarted(fn) {
+        bus.$on('started', fn);
+      },
       // onLoadById(fn) {
       //   bus.$on('load', fn);
       // },
       onLoadPlaylist(fn) {
         bus.$on('loadPlaylist', fn);
+      },
+      onTimeupdate(fn) {
+        bus.$on('timeupdate', fn);
+      },
+      onSeekTo(fn) {
+        bus.$on('seekTo', fn);
       },
     };
   },

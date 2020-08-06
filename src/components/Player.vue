@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       isNecessary: false,
+      timeout: null,
     };
   },
   computed: {
@@ -32,20 +33,30 @@ export default {
       'changePlayerPlayingState',
       'changeCurrentTrackId',
     ]),
+    timeupdate() {
+      this.$player.timeupdate(this.player);
+      this.timeout = setTimeout(() => this.timeupdate(), 1000);
+    },
     buffering(event) {
       const id = event.getVideoData().video_id;
       this.changePlayerLoadingState(true);
       this.changeCurrentTrackId(id);
     },
-    started() {
+    started(event) {
       this.changePlayerLoadingState(false);
       this.changePlayerPlayingState(true);
+      this.$player.started(event);
+      if(!this.timeout) this.timeupdate();
     },
     ended() {
       this.changePlayerPlayingState(false);
+      clearTimeout(this.timeout);
+      this.timeout = null;
     },
     paused() {
       this.changePlayerPlayingState(false);
+      clearTimeout(this.timeout);
+      this.timeout = null;
     },
   },
   mounted() {
@@ -82,6 +93,9 @@ export default {
       } else {
         this.player.loadPlaylist(idList, startIndex);
       }
+    });
+    this.$player.onSeekTo(time => {
+      this.player.seekTo(time);
     });
   },
 }
