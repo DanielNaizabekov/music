@@ -1,5 +1,5 @@
 <template>
-  <div class="controller" :class="{disabld: !currentTrackId}">
+  <div class="controller" :class="{disabled: !currentTrackId}">
     <div class="controller-left">
       <div @click="skipPrev" class="controller-round-btn">
         <i class="material-icons">skip_previous</i>
@@ -162,8 +162,7 @@ export default {
   justify-content: center;
 }
 .controller-center-title {
-  margin: 0;
-  margin-bottom: 15px;
+  margin: 0 0 15px 0;
   font-weight: 100;
 }
 .controller-slider {
@@ -234,18 +233,4 @@ export default {
     font-size: 34px;
   }
 }
-
-
-.slider-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  cursor: pointer;
-  /* display: none; */
-}
-/* .slider-overlay.active {
-  display: block;
-} */
 </style>
