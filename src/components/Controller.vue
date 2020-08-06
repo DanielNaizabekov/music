@@ -1,5 +1,5 @@
 <template>
-  <div class="controller" :class="{disabled: !currentTrackId}">
+  <div class="controller" :class="{disabld: !currentTrackId}">
     <div class="controller-left">
       <div @click="skipPrev" class="controller-round-btn">
         <i class="material-icons">skip_previous</i>
@@ -15,47 +15,34 @@
 
     <div class="controller-center">
       <h4 class="controller-center-title">{{ trackName }}</h4>
-      <div
-        @mousedown="startTrackSeek"
-        @touchstart="touchstart"
-        @touchmove="touchmove"
-        @touchend="touchend"
-        class="controller-slider-wrap"
-        :class="{active: isMouseDown}"
-        ref="sliderWrap"
-      >
+      <div class="controller-slider">
         <span class="controller-slider-counter">{{ currentTime | MMSS }}</span>
-        <div class="controller-slider">
-          <div :style="`width: ${sliderCurrentWidth}%`" class="controller-slider-inner"/>
-        </div>
-        <div :style="`left: ${sliderCurrentWidth}%`" class="controller-slider-tracker"></div>
+        <Slider
+          @startDrag="startTrackSeek"
+          @dragging="trackSeek"
+          :currentWidth="sliderCurrentWidth"
+        />
         <span class="controller-slider-counter">{{ trackDuration | MMSS }}</span>
       </div>
     </div>
 
     <div class="controller-right"></div>
-
-    <div
-      v-show="isMouseDown"
-      @mousemove="trackSeek"
-      @mouseup="finishTrackSeek"
-      class="slider-overlay"
-    />
   </div>
 </template>
 
 <script>
+import Slider from '@/components/Slider';
 import { mapGetters } from 'vuex';
 
 export default {
+  components: { Slider },
   data() {
     return {
       trackName: 'Track',
       trackDuration: '',
       currentTime: '',
-      sliderWrap: null,
-      isMouseDown: false,
       trackSeekTimer: null,
+      isSliderDragging: false,
     };
   },
   computed: {
@@ -82,46 +69,24 @@ export default {
     skipNext() {
       this.$player.nextTrack();
     },
-    getSearchingTime(offsetX) {
-      const offsetPercent = offsetX / this.sliderWrap.offsetWidth * 100;
-      const searchingTime = this.trackDuration * offsetPercent / 100;
+    getSearchingTime(offsetXPercent) {
+      const searchingTime = this.trackDuration * offsetXPercent / 100;
       return this.currentTime = searchingTime;
     },
-    startTrackSeek(event) {
-      this.isMouseDown = true;
-      const searchingTime = this.getSearchingTime(event.offsetX);
-      this.$player.seekTo(searchingTime);
+    startTrackSeek(offsetXPercent) {
+      this.isSliderDragging = true;
+      this.getSearchingTime(offsetXPercent);
+      this.$player.seekTo(this.currentTime);
     },
-    trackSeek(event) {
+    trackSeek(offsetXPercent) {
+      this.isSliderDragging = true;
       clearTimeout(this.trackSeekTimer);
 
-      const offsetX = event.offsetX - this.sliderWrap.offsetLeft;
-      if(offsetX < 0 || offsetX > this.sliderWrap.offsetWidth) return;
-      const searchingTime = this.getSearchingTime(offsetX);
-
+      this.getSearchingTime(offsetXPercent);
       this.trackSeekTimer = setTimeout(() => {
-        this.$player.seekTo(searchingTime);
+        this.$player.seekTo(this.currentTime);
+        this.isSliderDragging = false;
       }, 500);
-    },
-    finishTrackSeek() {
-      this.isMouseDown = false;
-    },
-    touchstart() {
-      this.isMouseDown = true;
-    },
-    touchmove(event) {
-      clearTimeout(this.trackSeekTimer);
-
-      const offsetX = event.touches[0].clientX - this.sliderWrap.offsetLeft;
-      if(offsetX < 0 || offsetX > this.sliderWrap.offsetWidth) return;
-      const searchingTime = this.getSearchingTime(offsetX);
-
-      this.trackSeekTimer = setTimeout(() => {
-        this.$player.seekTo(searchingTime);
-      }, 500);
-    },
-    touchend() {
-      this.isMouseDown = false;
     },
   },
   mounted() {
@@ -131,10 +96,9 @@ export default {
     });
     this.$player.onTimeupdate(playerData => {
       playerData.getCurrentTime().then(response => {
-        if(!this.isMouseDown) this.currentTime = response;
+        if(!this.isSliderDragging) this.currentTime = response;
       });
     });
-    this.sliderWrap = this.$refs.sliderWrap;
   },
   filters: {
     MMSS(v) {
@@ -190,7 +154,7 @@ export default {
 }
 .controller-center {
   flex-grow: 1;
-  padding: 0 35px;
+  padding: 0 37px;
   max-width: 600px;
   margin: 0 50px;
   display: flex;
@@ -202,16 +166,10 @@ export default {
   margin-bottom: 15px;
   font-weight: 100;
 }
-.controller-slider-wrap {
+.controller-slider {
+  position: relative;
   display: flex;
   align-items: center;
-  position: relative;
-  padding: 5px 0;
-  cursor: pointer;
-}
-.controller-slider-wrap:hover .controller-slider,
-.controller-slider-wrap.active .controller-slider {
-  transform: scaleY(1.8);
 }
 .controller-slider-counter {
   position: absolute;
@@ -221,35 +179,11 @@ export default {
 }
 .controller-slider-counter:first-child {
   left: 0;
-  transform: translateX(calc(-100% - 7px));
+  transform: translateX(calc(-100% - 10px));
 }
 .controller-slider-counter:last-child {
   right: 0;
-  transform: translateX(calc(100% + 7px));
-}
-.controller-slider {
-  width: 100%;
-  height: 3px;
-  background: #4D4D4D;
-  transition: .1s;
-}
-.controller-slider-inner {
-  height: 100%;
-  width: 0;
-  background: #ccc;
-}
-.controller-slider-tracker {
-  width: 13px;
-  height: 13px;
-  border-radius: 50px;
-  background: #ccc;
-  position: absolute;
-  transform: translateX(-50%) scale(0);
-  transition: transform .1s;
-}
-.controller-slider-wrap:hover .controller-slider-tracker,
-.controller-slider-wrap.active .controller-slider-tracker {
-  transform: translateX(-50%) scale(1);
+  transform: translateX(calc(100% + 10px));
 }
 
 .controller-right {
