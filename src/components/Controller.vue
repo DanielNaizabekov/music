@@ -14,7 +14,7 @@
     </div>
 
     <div class="controller-center">
-      <h4 class="controller-center-title">{{ trackName }}</h4>
+      <CropText class="controller-center-title" :text="trackName"/>
       <div class="controller-slider">
         <span class="controller-slider-counter">{{ currentTime | MMSS }}</span>
         <Slider
@@ -32,10 +32,11 @@
 
 <script>
 import Slider from '@/components/Slider';
+import CropText from '@/components/CropText';
 import { mapGetters } from 'vuex';
 
 export default {
-  components: { Slider },
+  components: { Slider, CropText },
   data() {
     return {
       trackName: 'Track',
@@ -116,7 +117,6 @@ export default {
   width: 100%;
   background: #121212;
   display: flex;
-  flex-wrap: wrap;
   padding: 18px 15px;
   color: #fff;
 }
@@ -143,6 +143,7 @@ export default {
 .controller-left {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 .controller-round-btn-play {
   margin: 0 8px;
@@ -154,16 +155,16 @@ export default {
 }
 .controller-center {
   flex-grow: 1;
-  padding: 0 37px;
+  padding: 0 37px 1px 37px;
   max-width: 600px;
   margin: 0 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
 }
 .controller-center-title {
   margin: 0 0 15px 0;
-  font-weight: 100;
 }
 .controller-slider {
   position: relative;
@@ -186,6 +187,7 @@ export default {
 }
 
 .controller-right {
+  flex-shrink: 0;
   margin-left: auto;
   width: 80px;
   /* height: 80px; */
@@ -199,6 +201,7 @@ export default {
 }
 @media screen and (max-width: 650px) {
   .controller {
+    flex-wrap: wrap;
     padding: 10px 15px;
   }
   .controller-center {

@@ -35,7 +35,8 @@
         class="tracks-list-item-preview"
         :style="`background: url(${item.previewUrl});`"
       />
-      <span class="tracks-list-item-title">{{ item.title }}</span>
+      <CropText class="tracks-list-item-title" :text="item.title"/>
+      <!-- <span class="tracks-list-item-title">{{ item.title }}</span> -->
     </div>
 
     <img
@@ -55,10 +56,12 @@
 </template>
 
 <script>
+import CropText from '@/components/CropText';
 import { mapGetters, mapActions } from 'vuex';
 import { SEARCH, SEARCH_LOAD_MORE } from '@/consts';
 
 export default {
+  components: { CropText },
   props: {
     title: {
       required: true,

@@ -1,5 +1,10 @@
 <template>
-  <div class="slider-wrap" ref="sliderWrap" @mousedown="startDrag">
+  <div
+    class="slider-wrap"
+    ref="sliderWrap"
+    @mousedown="startDrag"
+    @touchmove="touchmove"
+  >
     <div class="slider">
       <div
         class="slider-inner"
@@ -47,6 +52,15 @@ export default {
     endDrag() {
       this.isMouseDown = false;
       this.$emit('endDrag');
+    },
+    // touchstart(event) {
+    //   const offsetX = event.touches[0].clientX - this.sliderWrap.left;
+    //   this.$emit('startDrag', this.getOffsetXPercent(offsetX));
+    // },
+    touchmove(event) {
+      const offsetX = event.touches[0].clientX - this.sliderWrap.left;
+      if(offsetX < 0 || offsetX > this.sliderWrap.width) return;
+      this.$emit('dragging', this.getOffsetXPercent(offsetX));
     },
   },
   mounted() {
