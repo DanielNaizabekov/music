@@ -2,6 +2,7 @@
   <div
     class="slider-wrap"
     ref="sliderWrap"
+    :style="`width: ${width}px`"
     @mousedown="startDrag"
     @touchmove="touchmove"
   >
@@ -12,20 +13,25 @@
       />
     </div>
 
-    <div
-      class="slider-overlay"
+    <SliderOverlay
       v-show="isMouseDown"
-      @mousemove="dragging"
-      @mouseup="endDrag"
+      @dragging="dragging"
+      @endDrag="endDrag"
     />
   </div>
 </template>
 
 <script>
+import SliderOverlay from '@/components/SliderOverlay'
 export default {
+  components: { SliderOverlay },
   props: {
     currentWidth: {
       type: [Number, String],
+    },
+    width: {
+      type: [Number, String],
+      default: 'auto',
     },
   },
   data() {
@@ -45,7 +51,7 @@ export default {
       this.$emit('startDrag', this.getOffsetXPercent(event.offsetX));
     },
     dragging(event) {
-      const offsetX = event.offsetX - this.sliderWrap.left;
+      const offsetX = event.offsetX - this.$refs.sliderWrap.getBoundingClientRect().left;
       if(offsetX < 0 || offsetX > this.sliderWrap.width) return;
       this.$emit('dragging', this.getOffsetXPercent(offsetX));
     },
@@ -53,11 +59,8 @@ export default {
       this.isMouseDown = false;
       this.$emit('endDrag');
     },
-    // touchstart(event) {
-    //   const offsetX = event.touches[0].clientX - this.sliderWrap.left;
-    //   this.$emit('startDrag', this.getOffsetXPercent(offsetX));
-    // },
     touchmove(event) {
+      event.preventDefault();
       const offsetX = event.touches[0].clientX - this.sliderWrap.left;
       if(offsetX < 0 || offsetX > this.sliderWrap.width) return;
       this.$emit('dragging', this.getOffsetXPercent(offsetX));
@@ -105,12 +108,5 @@ export default {
 }
 .slider-wrap:hover .slider-inner:after {
   transform: translateX(50%) scale(1);
-}
-.slider-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
 }
 </style>

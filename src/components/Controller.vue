@@ -20,30 +20,58 @@
         <Slider
           @startDrag="startTrackSeek"
           @dragging="trackSeek"
+          @endDrag="endTrackSeek"
           :currentWidth="sliderCurrentWidth"
         />
         <span class="controller-slider-counter">{{ trackDuration | MMSS }}</span>
       </div>
     </div>
 
-    <div class="controller-right"></div>
+    <div class="controller-right">
+      <HoverCard class="controller-volume-slider-desktop">
+        <Slider
+          @startDrag="startVolumeSeek"
+          @dragging="volumeSeek"
+          :currentWidth="currentVolume"
+          width="200"
+        />
+        <template #activator>
+          <div @click="mute" class="controller-round-btn">
+            <transition mode="out-in">
+              <i v-if="+currentVolume === 0" key="mute" class="material-icons">volume_mute</i>
+              <i v-else key="unmute" class="material-icons">volume_up</i>
+            </transition>
+          </div>
+        </template>
+      </HoverCard>
+      <div class="controller-volume-slider-mobile">
+        <i class="material-icons">volume_mute</i>
+        <Slider
+          @startDrag="startVolumeSeek"
+          @dragging="volumeSeek"
+        />
+        <i class="material-icons">volume_up</i>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Slider from '@/components/Slider';
 import CropText from '@/components/CropText';
+import HoverCard from '@/components/HoverCard';
 import { mapGetters } from 'vuex';
 
 export default {
-  components: { Slider, CropText },
+  components: { Slider, CropText, HoverCard },
   data() {
     return {
       trackName: 'Track',
       trackDuration: '',
       currentTime: '',
       trackSeekTimer: null,
-      isSliderDragging: false,
+      isTrackSliderDragging: false,
+      currentVolume: '',
     };
   },
   computed: {
@@ -75,29 +103,50 @@ export default {
       return this.currentTime = searchingTime;
     },
     startTrackSeek(offsetXPercent) {
-      this.isSliderDragging = true;
+      this.isTrackSliderDragging = true;
       this.getSearchingTime(offsetXPercent);
       this.$player.seekTo(this.currentTime);
     },
     trackSeek(offsetXPercent) {
-      this.isSliderDragging = true;
+      this.isTrackSliderDragging = true;
       clearTimeout(this.trackSeekTimer);
 
-      this.getSearchingTime(offsetXPercent);
+      const searchingTime = this.getSearchingTime(offsetXPercent);
       this.trackSeekTimer = setTimeout(() => {
-        this.$player.seekTo(this.currentTime);
-        this.isSliderDragging = false;
+        this.$player.seekTo(searchingTime);
+        this.isTrackSliderDragging = false;
       }, 500);
+    },
+    endTrackSeek() {
+      this.isTrackSliderDragging = false;
+    },
+    startVolumeSeek(offsetXPercent) {
+      this.currentVolume = offsetXPercent;
+      this.$player.setVolume(offsetXPercent);
+    },
+    volumeSeek(offsetXPercent) {
+      this.currentVolume = offsetXPercent;
+      this.$player.setVolume(offsetXPercent);
+    },
+    mute() {
+      if(+this.currentVolume === 0) {
+        this.currentVolume = 50;
+        this.$player.setVolume(50);
+      } else {
+        this.currentVolume = '0';
+        this.$player.setVolume(0);
+      }
     },
   },
   mounted() {
     this.$player.onStarted(playerData => {
       this.trackName = playerData.getVideoData().title;
       this.trackDuration = playerData.getDuration();
+      this.currentVolume = playerData.getVolume();
     });
     this.$player.onTimeupdate(playerData => {
       playerData.getCurrentTime().then(response => {
-        if(!this.isSliderDragging) this.currentTime = response;
+        if(!this.isTrackSliderDragging) this.currentTime = response;
       });
     });
   },
@@ -120,8 +169,7 @@ export default {
   padding: 18px 15px;
   color: #fff;
 }
-.controller.disabled .controller-round-btn,
-.controller.disabled .controller-center {
+.controller.disabled {
   color: #4D4D4D;
   pointer-events: none;
 }
@@ -185,13 +233,27 @@ export default {
   right: 0;
   transform: translateX(calc(100% + 10px));
 }
-
 .controller-right {
   flex-shrink: 0;
   margin-left: auto;
-  width: 80px;
-  /* height: 80px; */
-  /* background: #181818; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.controller-volume-slider-mobile {
+  display: none;
+  align-items: center;
+  width: 100%;
+  max-width: 250px;
+}
+.controller-volume-slider-mobile i {
+  font-size: 20px;
+}
+.controller-volume-slider-mobile i:first-child {
+  margin-right: 7px;
+}
+.controller-volume-slider-mobile i:last-child {
+  margin-left: 7px;
 }
 
 @media screen and (max-width: 900px) {
@@ -215,6 +277,12 @@ export default {
   .controller-right {
     flex-grow: 1;
   }
+  .controller-volume-slider-desktop {
+    display: none;
+  }
+  .controller-volume-slider-mobile {
+    display: flex;
+  }
 }
 @media screen and (max-width: 460px) {
   .controller {
@@ -235,5 +303,13 @@ export default {
   .controller-round-btn-play i {
     font-size: 34px;
   }
+}
+.v-enter,
+.v-leave-to {
+  transform: scale(.2);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: .1s;
 }
 </style>

@@ -17,11 +17,12 @@
         <i class="material-icons">search</i>
       </div>
     </div>
+    <div class="btn theme-switcher" @click="switchTheme">Dark mode</div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import { SEARCH } from '@/consts';
 
 export default {
@@ -35,6 +36,7 @@ export default {
     ...mapActions({
       search: SEARCH,
     }),
+    ...mapMutations(['switchTheme']),
     submit() {
       if(this.prevTitle === this.title || !this.title) return;
       this.prevTitle = this.title;
@@ -51,9 +53,11 @@ export default {
 <style scoped>
 .search {
   position: fixed;
+  z-index: 100;
   width: calc(100% - 30px);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: start;
 }
 .search-input-wrap {
   border: 1px solid #767676;
@@ -94,6 +98,9 @@ export default {
 }
 .search-input-btn i {
   display: block;
+}
+.theme-switcher {
+  flex-shrink: 0;
 }
 
 @media screen and (max-width: 460px) {

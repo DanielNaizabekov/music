@@ -34,14 +34,23 @@ export default {
   min-height: 100%;
   background: #202020;
   padding: 10px 15px;
+  transition: .1s;
 }
 .lists-wrap {
-  margin: 55px 0 85px 0;
+  margin: 55px 0 86px 0;
 }
 
+@media screen and (max-width: 650px) {
+  .lists-wrap {
+    margin: 55px 0 121px 0;
+  }
+}
 @media screen and (max-width: 460px) {
   .home {
     padding: 10px;
+  }
+  .lists-wrap {
+    margin: 55px 0 116px 0;
   }
 }
 </style>

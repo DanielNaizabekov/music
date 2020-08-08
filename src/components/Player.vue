@@ -97,6 +97,9 @@ export default {
     this.$player.onSeekTo(time => {
       this.player.seekTo(time);
     });
+    this.$player.onSetVolume(volume => {
+      this.player.setVolume(volume);
+    });
   },
 }
 </script>

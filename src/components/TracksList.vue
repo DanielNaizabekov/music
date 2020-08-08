@@ -36,7 +36,6 @@
         :style="`background: url(${item.previewUrl});`"
       />
       <CropText class="tracks-list-item-title" :text="item.title"/>
-      <!-- <span class="tracks-list-item-title">{{ item.title }}</span> -->
     </div>
 
     <img
@@ -47,7 +46,7 @@
     >
     <button
       v-else-if="list.nextPageToken || nextPageExists"
-      class="track-list-load-more"
+      class="btn track-list-load-more"
       @click="loadMore"
     >
       Load more
@@ -230,22 +229,8 @@ export default {
   margin: 10px 0 20px 0;
 }
 .track-list-load-more {
-  background: transparent;
-  border: 1px solid #fff;
-  border-radius: 20px;
-  padding: 8px 20px;
-  color: #fff;
-  font-weight: 100;
   margin: 10px 0 20px 0;
   align-self: center;
-  cursor: pointer;
-  outline: none;
-}
-.track-list-load-more:hover {
-  background: #121212;
-}
-.track-list-load-more:active {
-  background: #202020;
 }
 
 @media (hover: none) {

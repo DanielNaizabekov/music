@@ -4,7 +4,7 @@
       class="crop-text"
       ref="cropText"
       :style="`transform: translate(-${overflowWidth}px); transition: ${transition};`"
-      @transitionend="transitionend"
+      @transitionend.stop="transitionend"
     >
       {{ text }}
     </h4>

@@ -30,6 +30,9 @@ export default {
       seekTo(time) {
         bus.$emit('seekTo', time);
       },
+      setVolume(volume) {
+        bus.$emit('setVolume', volume);
+      },
 
 
       onPlay(fn) {
@@ -58,6 +61,9 @@ export default {
       },
       onSeekTo(fn) {
         bus.$on('seekTo', fn);
+      },
+      onSetVolume(fn) {
+        bus.$on('setVolume', fn);
       },
     };
   },
