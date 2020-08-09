@@ -65,7 +65,7 @@ export default {
 }
 .crop-text {
   margin: 0;
-  font-weight: 100;
+  font-weight: var(--font-weight);
   display: inline-block;
 }
 </style>

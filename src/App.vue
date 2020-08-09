@@ -1,6 +1,6 @@
 <template>
   <div id="app" ref="app">
-    <Home class="home-wrap" :class="{scale}"/>
+    <Home :isThemeChanging="isThemeChanging"/>
     <Banner ref="banner" @beforeLeave="beforeThemeBannerLeave">
       <h1>{{ themeBannerTexts[theme] }}</h1>
     </Banner>
@@ -22,7 +22,7 @@ export default {
   components: { Home, Banner },
   data() {
     return {
-      scale: false,
+      isThemeChanging: false,
       themeBannerTexts,
     };
   },
@@ -30,22 +30,22 @@ export default {
     ...mapGetters(['theme']),
   },
   watch: {
-    theme(v) {
-      this.$refs.app.dataset.theme = v;
+    theme() {
       this.showThemeBanner();
     },
   },
   methods: {
     showThemeBanner() {
-      this.scale = true;
+      this.isThemeChanging = true;
       setTimeout(() => {
+        this.$refs.app.dataset.theme = this.theme;
         this.$refs.banner.start();
-      }, 80);
+      }, 200);
     },
     beforeThemeBannerLeave() {
       setTimeout(() => {
-        this.scale = false;
-      }, 100);
+        this.isThemeChanging = false;
+      }, 200);
     },
   },
 }
@@ -53,41 +53,75 @@ export default {
 
 <style>
 :root {
-  --color: red;
+  --primary: #f2f2f2;
+  --primary-light: #F9FDFF;
+  --primary-dark: #fff;
+  --secondary: #F2F2F2;
+  --secondary-light: #BABABA;
+  --contrast: #191919;
+  --contrast-light: #32323D;
+  --font-weight: 600;
 }
 [data-theme="DARK_THEME"] {
-  --color: blue;
+  --primary: #181818;
+  --primary-light: #202020;
+  --primary-dark: #121212;
+  --secondary: #373737;
+  --secondary-light: #4D4D4D;
+  --contrast: #fff;
+  --contrast-light: #ccc;
+  --font-weight: 100;
 }
+[data-invert="true"] {
+  filter: invert(1);
+}
+[data-theme="DARK_THEME"] [data-invert="true"] {
+  filter: none;
+}
+
+
 html, body {
   height: 100%;
-}
-body {
-  font-family: 'Montserrat', sans-serif;
 }
 #app {
   user-select: none;
   overflow: hidden;
+  color: var(--contrast);
+  font-family: 'Montserrat', sans-serif;
 }
 * {
   box-sizing: border-box;
 }
-.home-wrap.scale {
-  transform: scale(1.06);
-}
 .btn {
   background: transparent;
-  border: 1px solid #fff;
+  border: 1px solid var(--contrast);
   border-radius: 20px;
   padding: 8px 20px;
-  color: var(--color);
-  font-weight: 100;
+  font-weight: var(--font-weight);
   cursor: pointer;
   outline: none;
+  color: var(--contrast);
 }
 .btn:hover {
-  background: #121212;
+  background: var(--primary-dark);
 }
 .btn:active {
-  background: #202020;
+  background: var(--primary-light);
+}
+.round-btn {
+  border-radius: 50px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--secondary);
+  cursor: pointer;
+}
+.round-btn:hover {
+  background: var(--secondary-light);
+}
+.round-btn:active {
+  background: var(--secondary);
 }
 </style>

@@ -34,7 +34,6 @@ export default {
 
 <style scoped>
 .banner-content {
-  color: #fff;
   position: fixed;
   z-index: 100;
   top: 0;
@@ -47,11 +46,12 @@ export default {
 }
 .banner-overlay {
   position: fixed;
+  z-index: 20;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #1E1E1E;
+  background: var(--primary-dark);
   display: none;
 }
 .banner-content + .banner-overlay {
@@ -59,11 +59,11 @@ export default {
 }
 .banner-enter,
 .banner-leave-to {
-  opacity: 0;
-  transform: scale(0.950);
+  opacity: .3;
+  transform: scale(0.930);
 }
 .banner-enter-active,
 .banner-leave-active {
-  transition: .1s;
+  transition: .3s linear;
 }
 </style>

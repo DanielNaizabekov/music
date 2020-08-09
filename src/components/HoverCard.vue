@@ -74,8 +74,8 @@ export default {
 }
 .hover-card-content-border {
   padding: 15px 20px;
-  background: #202020;
-  border: 1px solid #4D4D4D;
+  background: var(--primary-light);
+  border: 1px solid var(--secondary-light);
   border-radius: 3px;
 }
 </style>

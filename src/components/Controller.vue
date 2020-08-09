@@ -1,14 +1,14 @@
 <template>
   <div class="controller" :class="{disabled: !currentTrackId}">
     <div class="controller-left">
-      <div @click="skipPrev" class="controller-round-btn">
+      <div @click="skipPrev" class="round-btn controller-round-btn">
         <i class="material-icons">skip_previous</i>
       </div>
-      <div @click="togglePlay" class="controller-round-btn controller-round-btn-play">
+      <div @click="togglePlay" class="round-btn controller-round-btn controller-round-btn-play">
         <i v-if="isPlayerPlaying" class="material-icons">pause</i>
         <i v-else class="material-icons">play_arrow</i>
       </div>
-      <div @click="skipNext" class="controller-round-btn">
+      <div @click="skipNext" class="round-btn controller-round-btn">
         <i class="material-icons">skip_next</i>
       </div>
     </div>
@@ -36,7 +36,7 @@
           width="200"
         />
         <template #activator>
-          <div @click="mute" class="controller-round-btn">
+          <div @click="mute" class="round-btn controller-round-btn">
             <transition mode="out-in">
               <i v-if="+currentVolume === 0" key="mute" class="material-icons">volume_mute</i>
               <i v-else key="unmute" class="material-icons">volume_up</i>
@@ -164,29 +164,17 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
-  background: #121212;
+  background: var(--primary-dark);
   display: flex;
   padding: 18px 15px;
-  color: #fff;
+  border-top: 1px solid var(--secondary-light);
 }
 .controller.disabled {
-  color: #4D4D4D;
+  color: var(--secondary-light);
   pointer-events: none;
 }
 .controller-round-btn {
-  border-radius: 50px;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.controller-round-btn:hover {
-  background: #373737;
-}
-.controller-round-btn:active {
-  background: #4D4D4D;
+  background: transparent;
 }
 .controller-left {
   display: flex;
@@ -223,7 +211,7 @@ export default {
   position: absolute;
   font-size: 11px;
   font-family: Arial;
-  color: #ccc;
+  color: var(--contrast-light);
 }
 .controller-slider-counter:first-child {
   left: 0;

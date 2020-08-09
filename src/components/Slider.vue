@@ -85,11 +85,11 @@ export default {
 }
 .slider {
   height: 100%;
-  background: #4D4D4D;
+  background: var(--secondary-light);
 }
 .slider-inner {
   height: 100%;
-  background: #ccc;
+  background: var(--contrast-light);
   position: relative;
   display: flex;
   align-items: center;
@@ -99,7 +99,7 @@ export default {
   display: block;
   width: 12px;
   height: 12px;
-  background: #ccc;
+  background: var(--contrast-light);
   border-radius: 50px;
   position: absolute;
   right: 0;

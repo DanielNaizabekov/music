@@ -17,12 +17,11 @@
         <i class="material-icons">search</i>
       </div>
     </div>
-    <div class="btn theme-switcher" @click="switchTheme">Dark mode</div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 import { SEARCH } from '@/consts';
 
 export default {
@@ -36,7 +35,6 @@ export default {
     ...mapActions({
       search: SEARCH,
     }),
-    ...mapMutations(['switchTheme']),
     submit() {
       if(this.prevTitle === this.title || !this.title) return;
       this.prevTitle = this.title;
@@ -51,18 +49,9 @@ export default {
 </script>
 
 <style scoped>
-.search {
-  position: fixed;
-  z-index: 100;
-  width: calc(100% - 30px);
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-}
 .search-input-wrap {
-  border: 1px solid #767676;
+  border: 1px solid var(--secondary-light);
   border-radius: 8px;
-  width: 500px;
   display: flex;
   overflow: hidden;
 }
@@ -74,26 +63,26 @@ export default {
 }
 .search-input {
   width: 100%;
-  color: #fff;
+  color: var(--contrast);
   border: 0;
   padding: 8px 12px;
-  background: #121212;
+  background: var(--primary-dark);
   outline: none;
 }
 .search-input-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #989898;
-  background: #313131;
+  color: var(--contrast-light);
+  background: var(--secondary);
   padding: 0 10px;
   cursor: pointer;
 }
 .search-input-btn:hover {
-  color: #fff;
+  color: var(--contrast);
 }
 .search-input-btn.disabled {
-  background: #4C4C4C;
+  background: var(--secondary-light);
   pointer-events: none;
 }
 .search-input-btn i {
@@ -101,11 +90,5 @@ export default {
 }
 .theme-switcher {
   flex-shrink: 0;
-}
-
-@media screen and (max-width: 460px) {
-  .search {
-    width: calc(100% - 20px);
-  }
 }
 </style>

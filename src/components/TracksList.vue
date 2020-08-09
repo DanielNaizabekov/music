@@ -2,7 +2,7 @@
   <div v-if="list.items && list.items.length" class="tracks-list">
     <div class="tracks-list-header">
       <h3 class="tracks-list-title">{{ title }}</h3>
-      <div class="tracks-list-round-btn tracks-list-header-btn" @click="loadPlaylist">
+      <div class="round-btn tracks-list-header-btn" @click="loadPlaylist">
         <i class="material-icons">play_arrow</i>
       </div>
     </div>
@@ -14,15 +14,17 @@
       class="tracks-list-item"
       :class="{active: item.id === currentTrackId}"
     >
-      <div class="tracks-list-round-btn tracks-list-item-play">
+      <div class="round-btn tracks-list-item-play">
         <transition mode="out-in">
           <img
+            data-invert="true"
             v-if="thisTrackIsLoading(item.id)"
             key="loading"
             src="../assets/img/loader.svg"
             alt="loading"
           >
           <img
+            data-invert="true"
             v-else-if="thisTrackIsPlaying(item.id)"
             key="playing"
             src="../assets/img/bars.svg"
@@ -146,31 +148,17 @@ export default {
   flex-direction: column;
   border-radius: 20px;
   overflow: hidden;
-  background: #181818;
+  background: var(--primary);
   margin-bottom: 15px;
 }
 .tracks-list:last-child {
   margin: 0;
 }
-.tracks-list-round-btn {
-  border-radius: 50px;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #373737;
-  cursor: pointer;
-}
-.tracks-list-round-btn:hover {
-  background: #4D4D4D;
-}
 .tracks-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
-  border-bottom: 1px solid #4C4C4C;
+  border-bottom: 1px solid var(--secondary-light);
   padding: 8px 15px;
 }
 .tracks-list-header-btn {
@@ -186,7 +174,6 @@ export default {
 .tracks-list-item {
   display: flex;
   align-items: center;
-  color: #fff;
   padding: 10px 15px;
   font-size: 14px;
   transition: .2s;
@@ -199,13 +186,13 @@ export default {
   margin-bottom: 10px;
 }
 .tracks-list-item:hover {
-  background: #121212;
+  background: var(--primary-dark);
 }
 .tracks-list-item:active {
-  background: #202020;
+  background: var(--primary-light);
 }
 .tracks-list-item.active {
-  background: #121212;
+  background: var(--primary-dark);
 }
 .tracks-list-item-play {
   flex-shrink: 0;
