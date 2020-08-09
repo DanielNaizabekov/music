@@ -17,18 +17,18 @@
       <div class="round-btn tracks-list-item-play">
         <transition mode="out-in">
           <img
-            data-invert="true"
             v-if="thisTrackIsLoading(item.id)"
             key="loading"
             src="../assets/img/loader.svg"
             alt="loading"
+            data-invert="true"
           >
           <img
-            data-invert="true"
             v-else-if="thisTrackIsPlaying(item.id)"
             key="playing"
             src="../assets/img/bars.svg"
             alt="playing"
+            data-invert="true"
           >
           <i v-else class="material-icons">play_arrow</i>
         </transition>
@@ -45,6 +45,7 @@
       class="track-list-load-more-loading"
       src="../assets/img/loader.svg"
       alt="loading"
+      data-invert="true"
     >
     <button
       v-else-if="list.nextPageToken || nextPageExists"
