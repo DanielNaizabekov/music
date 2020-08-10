@@ -9,7 +9,7 @@
 
 <script>
 import Home from './views/Home';
-import Banner from '@/components/Banner';
+import Banner from '@/components/app/Banner';
 import { mapGetters } from 'vuex';
 import { LIGHT_THEME, DARK_THEME } from '@/consts';
 
@@ -79,12 +79,12 @@ export default {
   filter: none;
 }
 
-
 html, body {
   height: 100%;
 }
 #app {
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
   overflow: hidden;
   color: var(--contrast);
   font-family: 'Montserrat', sans-serif;
@@ -117,11 +117,15 @@ html, body {
   align-items: center;
   background: var(--secondary);
   cursor: pointer;
+  user-select: none;
 }
 .round-btn:hover {
   background: var(--secondary-light);
 }
 .round-btn:active {
   background: var(--secondary);
+}
+.material-icons {
+  user-select: none;
 }
 </style>

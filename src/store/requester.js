@@ -1,5 +1,5 @@
-import axios from 'axios';
-import urls, { configs } from './urls';
+import axios, { configs } from '@/api';
+import urls from '@/api/urls';
 
 function wrapUrl(method, params) {
   let url = urls[method];

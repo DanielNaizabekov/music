@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import CropText from '@/components/CropText';
+import CropText from '@/components/app/CropText';
 import { mapGetters, mapActions } from 'vuex';
 import { SEARCH, SEARCH_LOAD_MORE } from '@/consts';
 
@@ -209,6 +209,7 @@ export default {
 }
 .tracks-list-item-title {
   transition: .2s;
+  user-select: none;
 }
 .tracks-list-item:hover .tracks-list-item-title {
   margin-left: 5px;

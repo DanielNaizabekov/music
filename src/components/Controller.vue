@@ -17,28 +17,18 @@
       <CropText class="controller-center-title" :text="trackName"/>
       <div class="controller-slider">
         <span class="controller-slider-counter">{{ currentTime | MMSS }}</span>
-        <Slider
-          @startDrag="startTrackSeek"
-          @dragging="trackSeek"
-          @endDrag="endTrackSeek"
-          :currentWidth="sliderCurrentWidth"
-        />
+        <Slider :value="sliderCurrentWidth" @input="trackSeek"/>
         <span class="controller-slider-counter">{{ trackDuration | MMSS }}</span>
       </div>
     </div>
 
     <div class="controller-right">
       <HoverCard class="controller-volume-slider-desktop">
-        <Slider
-          @startDrag="startVolumeSeek"
-          @dragging="volumeSeek"
-          :currentWidth="currentVolume"
-          width="200"
-        />
+        <Slider :value="currentVolume" @input="volumeSeek" style="width: 200px"/>
         <template #activator>
           <div @click="mute" class="round-btn controller-round-btn">
             <transition mode="out-in">
-              <i v-if="+currentVolume === 0" key="mute" class="material-icons">volume_mute</i>
+              <i v-if="currentVolume === 0" key="mute" class="material-icons">volume_mute</i>
               <i v-else key="unmute" class="material-icons">volume_up</i>
             </transition>
           </div>
@@ -46,10 +36,7 @@
       </HoverCard>
       <div class="controller-volume-slider-mobile">
         <i class="material-icons">volume_mute</i>
-        <Slider
-          @startDrag="startVolumeSeek"
-          @dragging="volumeSeek"
-        />
+        <Slider :value="currentVolume" @input="volumeSeek"/>
         <i class="material-icons">volume_up</i>
       </div>
     </div>
@@ -57,9 +44,9 @@
 </template>
 
 <script>
-import Slider from '@/components/Slider';
-import CropText from '@/components/CropText';
-import HoverCard from '@/components/HoverCard';
+import Slider from '@/components/app/Slider';
+import CropText from '@/components/app/CropText';
+import HoverCard from '@/components/app/HoverCard';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -102,11 +89,6 @@ export default {
       const searchingTime = this.trackDuration * offsetXPercent / 100;
       return this.currentTime = searchingTime;
     },
-    startTrackSeek(offsetXPercent) {
-      this.isTrackSliderDragging = true;
-      this.getSearchingTime(offsetXPercent);
-      this.$player.seekTo(this.currentTime);
-    },
     trackSeek(offsetXPercent) {
       this.isTrackSliderDragging = true;
       clearTimeout(this.trackSeekTimer);
@@ -117,23 +99,16 @@ export default {
         this.isTrackSliderDragging = false;
       }, 500);
     },
-    endTrackSeek() {
-      this.isTrackSliderDragging = false;
-    },
-    startVolumeSeek(offsetXPercent) {
-      this.currentVolume = offsetXPercent;
-      this.$player.setVolume(offsetXPercent);
-    },
     volumeSeek(offsetXPercent) {
       this.currentVolume = offsetXPercent;
       this.$player.setVolume(offsetXPercent);
     },
     mute() {
-      if(+this.currentVolume === 0) {
+      if(this.currentVolume === 0) {
         this.currentVolume = 50;
         this.$player.setVolume(50);
       } else {
-        this.currentVolume = '0';
+        this.currentVolume = 0;
         this.$player.setVolume(0);
       }
     },

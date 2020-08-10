@@ -19,7 +19,7 @@ import TracksList from '../components/TracksList';
 import RecomendationList from '../components/RecomendationList';
 import Controller from '../components/Controller';
 import Player from '../components/Player';
-import Switcher from '../components/Switcher';
+import Switcher from '../components/app/Switcher';
 import { mapGetters, mapMutations } from 'vuex';
 import { SEARCH } from '@/consts';
 
