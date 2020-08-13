@@ -1,0 +1,28 @@
+{
+ "short_name": "Music",
+ "name": "Music",
+ "theme_color": "#181818",
+ "background_color": "#181818",
+ "display": "standalone",
+ "icons": [
+  {
+   "src": "\/icon-70x70.png",
+   "sizes": "70x70",
+   "type": "image\/png",
+   "density": "0.75"
+  },
+  {
+   "src": "\/icon-144x144.png",
+   "sizes": "144x144",
+   "type": "image\/png",
+   "density": "2.0"
+  },
+  {
+   "src": "\/icon-310x310.png",
+   "sizes": "310x310",
+   "type": "image\/png",
+   "density": "2.0"
+  }
+ ],
+ "start_url": "/index.html"
+}
